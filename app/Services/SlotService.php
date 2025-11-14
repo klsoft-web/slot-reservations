@@ -29,8 +29,10 @@ class SlotService
                     $lock->release();
                 } else {
                     usleep(self::SLOTS_AWAIT_DELAY);
-                    while (!$availableSlots = Cache::get(SlotService::SLOTS_CACHE_KEY)) {
+                    $availableSlots = Cache::get(SlotService::SLOTS_CACHE_KEY);
+                    while (!$availableSlots) {
                         usleep(self::SLOTS_AWAIT_DELAY);
+                        $availableSlots = Cache::get(SlotService::SLOTS_CACHE_KEY);
                     }
                 }
             }
